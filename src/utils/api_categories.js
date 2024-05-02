@@ -13,7 +13,7 @@
 
 import axios from "axios";
 
-const url = "https://psychic-fiesta-9qr479q7xq3646-5000.app.github.dev";
+const url = "http://localhost:5000";
 
 export const getCategories = async () => {
   try {
