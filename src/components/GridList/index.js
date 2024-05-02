@@ -17,11 +17,12 @@ export default function GridList(props) {
   const {
     cards = [],
     categories = [],
-    category = "",
+    category = "all",
     setCategory,
     sort,
     setSort,
   } = props;
+  console.log(categories);
   return (
     <>
       <Box display={"flex"} justifyContent={"space-between"}>
@@ -31,10 +32,23 @@ export default function GridList(props) {
           </Typography>
           <FormControl style={{ width: "300px" }}>
             <InputLabel id="product-label">All Products</InputLabel>
-            <Select labelId="product-label" id="product-select" label="Name">
-              <MenuItem>Name</MenuItem>
-              <MenuItem>Price</MenuItem>
-              <MenuItem>Category</MenuItem>
+            <Select
+              labelId="product-label"
+              id="product-select"
+              label="Name"
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+              }}
+            >
+              <MenuItem value="all">All Categories</MenuItem>
+              {categories.map((category) => {
+                return (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         </Box>

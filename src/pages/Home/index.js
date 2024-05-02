@@ -14,14 +14,21 @@ export default function Home() {
       return getProducts(category, sort);
     },
   });
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
   return (
     <>
       <Header />
       <GridList
         cards={cards}
         category={category}
+        categories={categories}
         // categories={}
         setCategory={setCategory}
+        sort={sort}
+        setSort={setSort}
       />
     </>
   );
