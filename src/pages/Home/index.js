@@ -8,13 +8,14 @@ import { useState } from "react";
 export default function Home() {
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("");
+
   const { data: cards } = useQuery({
     queryKey: ["products", category],
     queryFn: () => {
       return getProducts(category, sort);
     },
   });
-  const { data: categories } = useQuery({
+  const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
