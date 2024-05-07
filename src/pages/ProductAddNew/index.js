@@ -1,67 +1,50 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import Header from "../../components/Header";
+import { useState } from "react";
 import {
-  Typography,
-  Button,
   Grid,
-  Container,
+  Button,
   Card,
   CardContent,
+  Typography,
+  Box,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Chip,
   TextField,
 } from "@mui/material";
-import { useSnackbar } from "notistack";
-import { getProduct, updateProduct } from "../../utils/api_products";
+import Header from "../../components/Header";
+import { addProduct } from "../../utils/api_products";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-export default function ProductEdit() {
-  const { id } = useParams();
+export default function ProductAddNew() {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
 
-  // get data from product api: /products/:id
-  const {
-    data: product,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["product", id],
-    queryFn: () => getProduct(id),
-  });
-
-  // when data is fetched from API, set the states for all the fields with its current value
-  useEffect(() => {
-    // if product is not undefined
-    if (product) {
-      setName(product.name);
-      setDescription(product.description);
-      setPrice(product.price);
-      setCategory(product.category);
-    }
-  }, [product]);
-
-  // setup mutation for Edit product
-  const updateProductMutation = useMutation({
-    mutationFn: updateProduct,
+  //setup mutation for add new product
+  const addNewMutation = useMutation({
+    mutationFn: addProduct,
     onSuccess: () => {
-      enqueueSnackbar("Product is Updated", { variant: "success" });
+      //if API call is success, do what?
+      // console.log("success");
       navigate("/");
     },
-    onError: (error) => {
-      enqueueSnackbar(error.response.data.message, { variant: "error" });
-      // alert(error.response.data.message);
+    onError: (e) => {
+      //if API call is error, do what?
+      // console.log(e);
+      alert(e.response.data.message);
     },
   });
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
     // trigger the mutation to call the API
-    updateProductMutation.mutate({
-      id: id,
+    addNewMutation.mutate({
       name: name,
       description: description,
       price: price,
@@ -69,30 +52,20 @@ export default function ProductEdit() {
     });
   };
 
-  // if API data haven't return yet
-  if (isLoading) {
-    return <Container>Loading...</Container>;
-  }
-
-  // if there is an error in API call
-  if (error) {
-    return <Container>{error.response.data.message}</Container>;
-  }
-
   return (
     <Container>
       <Header />
-      <Card>
+      <Card sx={{ marginTop: "100px" }}>
         <CardContent>
           <Typography
-            variant="h4"
+            variant="h3"
             sx={{
               margin: "20px 0",
               fontWeight: "bold",
               textAlign: "center",
             }}
           >
-            Edit Product
+            Add New Product
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -134,7 +107,7 @@ export default function ProductEdit() {
             </Grid>
             <Grid item xs={12}>
               <Button variant="contained" fullWidth onClick={handleFormSubmit}>
-                Update
+                Submit
               </Button>
             </Grid>
           </Grid>

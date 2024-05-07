@@ -12,8 +12,17 @@ import {
   Select,
   Chip,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteProduct } from "../../utils/api_products";
+import { useSnackbar } from "notistack";
+import { addToCart } from "../../utils/api_cart";
 
 export default function GridList(props) {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
+
   const {
     cards = [],
     categories = [],
@@ -21,8 +30,47 @@ export default function GridList(props) {
     setCategory,
     sort,
     setSort,
+    page,
+    setPage,
   } = props;
-  console.log(categories);
+
+  const addToCartMutation = useMutation({
+    mutationFn: addToCart,
+    onSuccess: () => {
+      // display success message
+      enqueueSnackbar("Product has been added to cart successfully.", {
+        variant: "success",
+      });
+      // reset the cart data
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
+    },
+    onError: (error) => {
+      // display error message
+      enqueueSnackbar(error.response.data.message, {
+        variant: "error",
+      });
+    },
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      // display success message
+      enqueueSnackbar("Product is deleted", {
+        variant: "success",
+      });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError: (error) => {
+      // display error message
+      enqueueSnackbar(error.response.data.message, {
+        variant: "error",
+      });
+    },
+  });
+
   return (
     <>
       <Box display={"flex"} justifyContent={"space-between"}>
@@ -39,6 +87,7 @@ export default function GridList(props) {
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value);
+                setPage(1);
               }}
             >
               <MenuItem value="all">All Categories</MenuItem>
@@ -53,7 +102,14 @@ export default function GridList(props) {
           </FormControl>
         </Box>
         <Box sx={{ margin: "8px" }}>
-          <Button variant="contained" size="large" color="success">
+          <Button
+            variant="contained"
+            size="large"
+            color="success"
+            onClick={() => {
+              navigate("/add");
+            }}
+          >
             Add New
           </Button>
         </Box>
@@ -65,8 +121,8 @@ export default function GridList(props) {
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
           {cards.map((card) => (
-            <Grid item xs={4}>
-              <Card key={card._id}>
+            <Grid item xs={4} key={card._id}>
+              <Card>
                 <CardContent>
                   <Typography
                     variant="h6"
@@ -86,6 +142,9 @@ export default function GridList(props) {
                     variant="contained"
                     fullWidth
                     sx={{ marginTop: "8px", marginBottom: "8px" }}
+                    onClick={() => {
+                      addToCartMutation.mutate(card);
+                    }}
                   >
                     Add To Cart
                   </Button>
@@ -94,10 +153,29 @@ export default function GridList(props) {
                     justifyContent={"space-between"}
                     sx={{ marginTop: "8px", marginBottom: "8px" }}
                   >
-                    <Button variant="contained" color="secondary">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{ width: "100px" }}
+                      onClick={() => {
+                        navigate("/products/" + card._id);
+                      }}
+                    >
                       Edit
                     </Button>
-                    <Button variant="contained" color="error">
+                    <Button
+                      variant="contained"
+                      color="error"
+                      sx={{ width: "100px" }}
+                      onClick={() => {
+                        const confirm = window.confirm(
+                          "Are you sure you want to delete this product?"
+                        );
+                        if (confirm) {
+                          deleteProductMutation.mutate(card._id);
+                        }
+                      }}
+                    >
                       Delete
                     </Button>
                   </Box>
@@ -105,6 +183,13 @@ export default function GridList(props) {
               </Card>
             </Grid>
           ))}
+          {cards.length === 0 ? (
+            <Grid item xs={12}>
+              <Typography align="center" sx={{ padding: "10px 0" }}>
+                No items found.
+              </Typography>
+            </Grid>
+          ) : null}
         </Grid>
       </Container>
     </>
