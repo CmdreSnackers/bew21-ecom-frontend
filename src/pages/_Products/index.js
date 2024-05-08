@@ -2,16 +2,12 @@ import { useState } from "react";
 import Header from "../../components/Header";
 import {
   Typography,
-  Divider,
   Button,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Card,
-  CardContent,
   Grid,
-  Box,
   Container,
 } from "@mui/material";
 import ProductCard from "../../components/ProductCard";

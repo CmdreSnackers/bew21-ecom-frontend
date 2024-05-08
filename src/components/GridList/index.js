@@ -28,9 +28,9 @@ export default function GridList(props) {
     categories = [],
     category = "all",
     setCategory,
-    sort,
-    setSort,
-    page,
+    // sort,
+    // setSort,
+    // page,
     setPage,
   } = props;
 

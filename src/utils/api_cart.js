@@ -17,8 +17,7 @@ export const addToCart = (product) => {
 
 export const getCart = () => {
   // get cart items from local storage
-  // return JSON.parse(localStorage.getItem("cart")) || [];
-  return JSON.parse(localStorage.getItem("cart"));
+  return JSON.parse(localStorage.getItem("cart")) || [];
 };
 
 export const removeProductFromCart = (_id) => {

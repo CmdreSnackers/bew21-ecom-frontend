@@ -36,22 +36,36 @@ export default function Header() {
           onClick={() => {
             navigate("/");
           }}
+          style={{
+            color: location.pathname === "/" ? "white" : "inherit",
+            backgroundColor: location.pathname === "/" ? "#238be6" : "inherit",
+          }}
         >
           Home
         </Button>
         <Button
-          style={
-            {
-              // color: location.pathname === "/cart" ? "white" : "inherit",
-              // backgroundColor:
-              //   location.pathname === "/cart" ? "#238be6" : "inherit",
-            }
-          }
+          style={{
+            color: location.pathname === "/cart" ? "white" : "inherit",
+            backgroundColor:
+              location.pathname === "/cart" ? "#238be6" : "inherit",
+          }}
           onClick={() => {
             navigate("/cart");
           }}
         >
           Cart
+        </Button>
+        <Button
+          style={{
+            color: location.pathname === "/orders" ? "white" : "inherit",
+            backgroundColor:
+              location.pathname === "/orders" ? "#238be6" : "inherit",
+          }}
+          onClick={() => {
+            navigate("/orders");
+          }}
+        >
+          My Orders
         </Button>
       </Box>
       <Divider />

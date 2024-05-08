@@ -1,5 +1,6 @@
 import { Container, Typography, Box, Button } from "@mui/material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import {
   Table,
@@ -15,6 +16,7 @@ import Header from "../../components/Header";
 import { getCart, removeProductFromCart } from "../../utils/api_cart";
 
 export default function Cart() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { data: cartItems = [] } = useQuery({
@@ -117,7 +119,13 @@ export default function Cart() {
             </Table>
           </TableContainer>
           <Box mt={3} textAlign="right">
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                navigate("/checkout");
+              }}
+            >
               Checkout
             </Button>
           </Box>
