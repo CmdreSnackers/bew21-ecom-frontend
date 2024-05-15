@@ -21,12 +21,20 @@ export default function Checkout() {
 
   const addNewOrderMutation = useMutation({
     mutationFn: addNewOrder,
-    onSuccess: () => {
+    onSuccess: (responseData) => {
       //remove Items from cart
       emptyCart();
+
       // temporary redirect
-      navigate("/orders");
+      // navigate("/orders");
+
+      // get the billplz url (responseData.billplz_url)
+      // console.log(responseData);
+      const billplz_url = responseData.billplz_url;
+      // redirect user to billplz payment page
+      window.location.href = billplz_url;
     },
+
     onError: (error) => {
       enqueueSnackbar(error.response.data.message, {
         variant: "error",

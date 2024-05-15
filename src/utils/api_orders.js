@@ -8,11 +8,15 @@ export const getOrders = async () => {
 };
 
 export const addNewOrder = async (data) => {
-  const response = await axios.post(`${url}/orders`, JSON.stringify(data), {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await axios.post(
+    `${url}/orders`, // url of the POST API
+    JSON.stringify(data), // data you want to pass through the API in JSON format
+    {
+      headers: {
+        "Content-Type": "application/json", // telling the API you are sending JSON data
+      },
+    }
+  );
   return response.data;
 };
 

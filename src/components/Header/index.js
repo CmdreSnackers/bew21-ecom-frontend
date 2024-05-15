@@ -8,7 +8,16 @@ export default function Header() {
   let pageTitle = "Welcome to My Store";
 
   if (location.pathname === "/cart") {
-    pageTitle = "Cart";
+    pageTitle = "My Cart";
+  }
+  if (location.pathname === "/orders") {
+    pageTitle = "My Orders";
+  }
+  if (location.pathname === "/login") {
+    pageTitle = "Login to your Account";
+  }
+  if (location.pathname === "/signup") {
+    pageTitle = "Create a New Account";
   }
   return (
     <>
@@ -66,6 +75,30 @@ export default function Header() {
           }}
         >
           My Orders
+        </Button>
+        <Button
+          style={{
+            color: location.pathname === "/login" ? "white" : "inherit",
+            backgroundColor:
+              location.pathname === "/login" ? "#238be6" : "inherit",
+          }}
+          onClick={() => {
+            navigate("/login");
+          }}
+        >
+          Login
+        </Button>
+        <Button
+          style={{
+            color: location.pathname === "/signup" ? "white" : "inherit",
+            backgroundColor:
+              location.pathname === "/signup" ? "#238be6" : "inherit",
+          }}
+          onClick={() => {
+            navigate("/signup");
+          }}
+        >
+          Signup
         </Button>
       </Box>
       <Divider />
