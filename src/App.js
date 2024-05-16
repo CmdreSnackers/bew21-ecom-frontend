@@ -10,29 +10,32 @@ import Orders from "./pages/Orders";
 import PaymentVerify from "./pages/PaymentVerify";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import { CookiesProvider } from "react-cookie";
 
 function App() {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <SnackbarProvider
-        maxSnack={3}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/add" element={<ProductAddNew />} />
-            <Route path="/products/:id" element={<ProductEdit />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/verify-payment" element={<PaymentVerify />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-          </Routes>
-        </BrowserRouter>
-      </SnackbarProvider>
+      <CookiesProvider defaultSetOptions={{ path: "" }}>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/add" element={<ProductAddNew />} />
+              <Route path="/products/:id" element={<ProductEdit />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/verify-payment" element={<PaymentVerify />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+            </Routes>
+          </BrowserRouter>
+        </SnackbarProvider>
+      </CookiesProvider>
     </QueryClientProvider>
   );
 }

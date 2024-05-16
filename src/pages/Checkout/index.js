@@ -7,10 +7,14 @@ import Header from "../../components/Header";
 import { getCart } from "../../utils/api_cart";
 import { addNewOrder } from "../../utils/api_orders";
 import { emptyCart } from "../../utils/_api_cart";
+import { useCookies } from "react-cookie";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [cookies] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookies;
+  const { role, token } = currentUser;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -67,6 +71,7 @@ export default function Checkout() {
         customerEmail: email,
         products: cart,
         totalPrice: calculateTotal(),
+        token: token,
       });
     }
   };

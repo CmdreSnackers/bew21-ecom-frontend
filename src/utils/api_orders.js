@@ -2,8 +2,12 @@ import axios from "axios";
 
 const url = "http://localhost:5000";
 
-export const getOrders = async () => {
-  const res = await axios.get(`${url}/orders`);
+export const getOrders = async (token) => {
+  const res = await axios.get(`${url}/orders`, {
+    headers: {
+      Authorization: "Bearer " + token, // include token in the API
+    },
+  });
   return res.data;
 };
 
@@ -14,6 +18,7 @@ export const addNewOrder = async (data) => {
     {
       headers: {
         "Content-Type": "application/json", // telling the API you are sending JSON data
+        Authorization: "Bearer " + data.token, // include token in the API
       },
     }
   );
@@ -27,14 +32,19 @@ export const updateOrder = async (data) => {
     {
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + data.token, // include token in the API
       },
     }
   );
   return response.data;
 };
 
-export const deleteOrder = async (id) => {
-  const response = await axios.delete(`${url}/orders/${id}`);
+export const deleteOrder = async (data) => {
+  const response = await axios.delete(`${url}/orders/${data._id}`, {
+    headers: {
+      Authorization: "Bearer " + data.token, // include token in the API
+    },
+  });
   return response.data;
 };
 

@@ -16,14 +16,18 @@ import {
 } from "@mui/material";
 import { getOrders, deleteOrder, updateOrder } from "../../utils/api_orders";
 import Header from "../../components/Header";
+import { useCookies } from "react-cookie";
 
 export default function Orders() {
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
+  const [cookies] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookies;
+  const { role, token } = currentUser;
 
   const { data: orders = [] } = useQuery({
-    queryKey: ["order"],
-    queryFn: () => getOrders(),
+    queryKey: ["order", token],
+    queryFn: () => getOrders(token),
   });
 
   const deleteOrderMutation = useMutation({
@@ -48,7 +52,10 @@ export default function Orders() {
   const handleRemoveOrder = (_id) => {
     const answer = window.confirm("Remove Order?");
     if (answer) {
-      deleteOrderMutation.mutate(_id);
+      deleteOrderMutation.mutate({
+        _id: _id,
+        token: token,
+      });
     }
   };
 

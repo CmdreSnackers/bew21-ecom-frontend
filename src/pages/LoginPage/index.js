@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import Header from "../../components/Header";
 import {
   Typography,
@@ -13,10 +13,12 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { loginUser } from "../../utils/api_users";
+import { useCookies } from "react-cookie";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [cookies, setCookie] = useCookies(["currentUser"]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,8 +26,14 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log(data);
+      // save current logged-in user data into cookies
+      setCookie("currentUser", data, {
+        maxAge: 60 * 60 * 24 * 30, // 3600 * 24 = 24 hours * 7 = 1 month
+      });
+      // console.log(data);
       enqueueSnackbar("Successfully logged-in", { variant: "success" });
+      // redirect to home page
+      navigate("/");
     },
     onError: (error) => {
       enqueueSnackbar(error.response.data.message, { variant: "error" });

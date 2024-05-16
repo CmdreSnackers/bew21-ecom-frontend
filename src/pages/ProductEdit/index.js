@@ -14,11 +14,15 @@ import {
 import { useSnackbar } from "notistack";
 import { getProduct, updateProduct } from "../../utils/api_products";
 import { uploadImage } from "../../utils/api_images";
+import { useCookies } from "react-cookie";
 
 export default function ProductEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [cookies] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookies;
+  const { token } = currentUser;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -86,6 +90,7 @@ export default function ProductEdit() {
       price: price,
       category: category,
       image: image,
+      token: token,
     });
   };
 

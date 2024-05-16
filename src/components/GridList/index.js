@@ -17,8 +17,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProduct } from "../../utils/api_products";
 import { useSnackbar } from "notistack";
 import { addToCart } from "../../utils/api_cart";
+import { useCookies } from "react-cookie";
+import { Token } from "@mui/icons-material";
 
 export default function GridList(props) {
+  const [cookies, setCookie] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookies;
+  const { role, token } = currentUser;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -101,18 +106,20 @@ export default function GridList(props) {
             </Select>
           </FormControl>
         </Box>
-        <Box sx={{ margin: "8px" }}>
-          <Button
-            variant="contained"
-            size="large"
-            color="success"
-            onClick={() => {
-              navigate("/add");
-            }}
-          >
-            Add New
-          </Button>
-        </Box>
+        {role && role === "admin" ? (
+          <Box sx={{ margin: "8px" }}>
+            <Button
+              variant="contained"
+              size="large"
+              color="success"
+              onClick={() => {
+                navigate("/add");
+              }}
+            >
+              Add New
+            </Button>
+          </Box>
+        ) : null}
       </Box>
       <Container>
         <Grid
@@ -143,42 +150,52 @@ export default function GridList(props) {
                     fullWidth
                     sx={{ marginTop: "8px", marginBottom: "8px" }}
                     onClick={() => {
-                      addToCartMutation.mutate(card);
+                      // 0, false, undefined, null
+                      if (currentUser && currentUser.email) {
+                        addToCartMutation.mutate(card);
+                      } else {
+                        enqueueSnackbar("Please Login First");
+                      }
                     }}
                   >
                     Add To Cart
                   </Button>
-                  <Box
-                    display={"flex"}
-                    justifyContent={"space-between"}
-                    sx={{ marginTop: "8px", marginBottom: "8px" }}
-                  >
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      sx={{ width: "100px" }}
-                      onClick={() => {
-                        navigate("/products/" + card._id);
-                      }}
+                  {role && role === "admin" ? (
+                    <Box
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                      sx={{ marginTop: "8px", marginBottom: "8px" }}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      sx={{ width: "100px" }}
-                      onClick={() => {
-                        const confirm = window.confirm(
-                          "Are you sure you want to delete this product?"
-                        );
-                        if (confirm) {
-                          deleteProductMutation.mutate(card._id);
-                        }
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{ width: "100px" }}
+                        onClick={() => {
+                          navigate("/products/" + card._id);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        sx={{ width: "100px" }}
+                        onClick={() => {
+                          const confirm = window.confirm(
+                            "Are you sure you want to delete this product?"
+                          );
+                          if (confirm) {
+                            deleteProductMutation.mutate({
+                              _id: card._id,
+                              token: token,
+                            });
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  ) : null}
                 </CardContent>
               </Card>
             </Grid>

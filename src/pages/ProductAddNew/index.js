@@ -12,9 +12,13 @@ import Header from "../../components/Header";
 import { addProduct } from "../../utils/api_products";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export default function ProductAddNew() {
   const navigate = useNavigate();
+  const [cookies] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookies;
+  const { token } = currentUser;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -43,6 +47,7 @@ export default function ProductAddNew() {
       description: description,
       price: price,
       category: category,
+      token: token,
     });
   };
 
