@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Container, Grid, Typography, Button, TextField } from "@mui/material";
 import Header from "../../components/Header";
 import { getCart } from "../../utils/api_cart";
@@ -10,11 +10,11 @@ import { emptyCart } from "../../utils/_api_cart";
 import { useCookies } from "react-cookie";
 
 export default function Checkout() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [cookies] = useCookies(["currentUser"]);
   const { currentUser = {} } = cookies;
-  const { role, token } = currentUser;
+  const { token } = currentUser;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -126,8 +126,7 @@ export default function Checkout() {
             style={{ marginTop: "20px" }}
             onClick={handleCheckout}
           >
-            Pay ${calculateTotal()}
-            now
+            Pay ${calculateTotal()} now
           </Button>
         </Grid>
         <Grid item xs={12} md={5}>

@@ -25,6 +25,9 @@ export default function Header() {
   if (location.pathname === "/signup") {
     pageTitle = "Create a New Account";
   }
+  if (location.pathname === "/category") {
+    pageTitle = "Create a New Account";
+  }
 
   const handleLogout = () => {
     //remove current user cookie
@@ -92,6 +95,18 @@ export default function Header() {
             }}
           >
             My Orders
+          </Button>
+          <Button
+            style={{
+              color: location.pathname === "/category" ? "white" : "inherit",
+              backgroundColor:
+                location.pathname === "/category" ? "#238be6" : "inherit",
+            }}
+            onClick={() => {
+              navigate("/category");
+            }}
+          >
+            Categories
           </Button>
         </Box>
         {currentUser ? (

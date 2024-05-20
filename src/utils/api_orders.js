@@ -27,7 +27,7 @@ export const addNewOrder = async (data) => {
 
 export const updateOrder = async (data) => {
   const response = await axios.put(
-    `${url}/orders/${data.id}`,
+    `${url}/orders/${data._id}`,
     JSON.stringify(data),
     {
       headers: {

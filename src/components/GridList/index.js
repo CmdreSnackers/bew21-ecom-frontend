@@ -11,6 +11,7 @@ import {
   MenuItem,
   Select,
   Chip,
+  Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,7 +19,7 @@ import { deleteProduct } from "../../utils/api_products";
 import { useSnackbar } from "notistack";
 import { addToCart } from "../../utils/api_cart";
 import { useCookies } from "react-cookie";
-import { Token } from "@mui/icons-material";
+import { Inventory2 } from "@mui/icons-material";
 
 export default function GridList(props) {
   const [cookies, setCookie] = useCookies(["currentUser"]);
@@ -131,6 +132,16 @@ export default function GridList(props) {
             <Grid item xs={4} key={card._id}>
               <Card>
                 <CardContent>
+                  <img
+                    src={
+                      "http://localhost:5000/" +
+                      (card.image && card.image !== ""
+                        ? card.image
+                        : "uploads/default_image.png")
+                    }
+                    alt="something"
+                    width="100%"
+                  />
                   <Typography
                     variant="h6"
                     sx={{ marginTop: "8px", marginBottom: "8px" }}
@@ -142,9 +153,18 @@ export default function GridList(props) {
                     justifyContent={"space-between"}
                     sx={{ marginTop: "8px", marginBottom: "8px" }}
                   >
-                    <Chip label={card.price} color="success" />
-                    <Chip label={card.category} color="warning" />
+                    <Chip
+                      avatar={<Avatar>$</Avatar>}
+                      label={card.price}
+                      color="success"
+                    />
+                    <Chip
+                      icon={<Inventory2 />}
+                      label={card.category}
+                      color="warning"
+                    />
                   </Box>
+
                   <Button
                     variant="contained"
                     fullWidth

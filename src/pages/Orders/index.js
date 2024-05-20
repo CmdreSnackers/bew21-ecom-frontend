@@ -80,6 +80,7 @@ export default function Orders() {
     updateOrderMutation.mutate({
       ...order,
       status: status,
+      token,
     });
   };
 

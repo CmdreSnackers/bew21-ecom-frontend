@@ -11,6 +11,7 @@ import PaymentVerify from "./pages/PaymentVerify";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import { CookiesProvider } from "react-cookie";
+import CategoryPage from "./pages/Categories";
 
 function App() {
   const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ function App() {
               <Route path="/verify-payment" element={<PaymentVerify />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/category" element={<CategoryPage />} />
             </Routes>
           </BrowserRouter>
         </SnackbarProvider>
