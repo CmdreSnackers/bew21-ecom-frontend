@@ -22,7 +22,7 @@
 
 import axios from "axios";
 
-const url = "http://localhost:5000";
+import { url } from "./data";
 
 export const getProducts = async (category, perPage, page) => {
   let params = {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://psychic-fiesta-9qr479q7xq3646-5000.app.github.dev";
+import { url } from "./data";
 
 export const getCategories = async () => {
   try {
