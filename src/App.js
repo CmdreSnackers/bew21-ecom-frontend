@@ -34,6 +34,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/category" element={<CategoryPage />} />
+              {/* <Route path="/categories" element={<CategoriesPage />} /> */}
             </Routes>
           </BrowserRouter>
         </SnackbarProvider>

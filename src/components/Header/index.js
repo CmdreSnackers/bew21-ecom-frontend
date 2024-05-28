@@ -96,18 +96,20 @@ export default function Header() {
           >
             My Orders
           </Button>
-          <Button
-            style={{
-              color: location.pathname === "/category" ? "white" : "inherit",
-              backgroundColor:
-                location.pathname === "/category" ? "#238be6" : "inherit",
-            }}
-            onClick={() => {
-              navigate("/category");
-            }}
-          >
-            Categories
-          </Button>
+          {currentUser && currentUser.role === "admin" ? (
+            <Button
+              style={{
+                color: location.pathname === "/category" ? "white" : "inherit",
+                backgroundColor:
+                  location.pathname === "/category" ? "#238be6" : "inherit",
+              }}
+              onClick={() => {
+                navigate("/category");
+              }}
+            >
+              Categories
+            </Button>
+          ) : null}
         </Box>
         {currentUser ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

@@ -99,8 +99,8 @@ export default function GridList(props) {
               <MenuItem value="all">All Categories</MenuItem>
               {categories.map((category) => {
                 return (
-                  <MenuItem key={category} value={category}>
-                    {category}
+                  <MenuItem key={category._id} value={category._id}>
+                    {category.name}
                   </MenuItem>
                 );
               })}
@@ -160,7 +160,11 @@ export default function GridList(props) {
                     />
                     <Chip
                       icon={<Inventory2 />}
-                      label={card.category}
+                      label={
+                        card.category && card.category.name
+                          ? card.category.name
+                          : ""
+                      }
                       color="warning"
                     />
                   </Box>

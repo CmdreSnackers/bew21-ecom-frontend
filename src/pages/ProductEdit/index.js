@@ -10,11 +10,16 @@ import {
   Card,
   CardContent,
   TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { getProduct, updateProduct } from "../../utils/api_products";
 import { uploadImage } from "../../utils/api_images";
 import { useCookies } from "react-cookie";
+import { getCategories } from "../../utils/api_categories";
 
 export default function ProductEdit() {
   const { id } = useParams();
@@ -37,6 +42,12 @@ export default function ProductEdit() {
   } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProduct(id),
+  });
+
+  //load categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories(),
   });
 
   // when data is fetched from API, set the states for all the fields with its current value
@@ -149,13 +160,28 @@ export default function ProductEdit() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Category"
-                variant="outlined"
-                fullWidth
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+              <FormControl
+                sx={{ marginTop: "10px", width: "200px", marginLeft: "10px" }}
+              >
+                <InputLabel id="product-select-label">Category</InputLabel>
+                <Select
+                  labelId="product-select-label"
+                  id="product-select"
+                  label="Category"
+                  value={category}
+                  onChange={(event) => {
+                    setCategory(event.target.value);
+                  }}
+                >
+                  {categories.map((category) => {
+                    return (
+                      <MenuItem key={category._id} value={category._id}>
+                        {category.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               {image !== "" ? (

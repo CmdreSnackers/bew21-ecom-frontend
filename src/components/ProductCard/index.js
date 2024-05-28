@@ -70,6 +70,16 @@ export default function ProductCard(props) {
   return (
     <Card>
       <CardContent>
+        {/* <img src={"http://localhost:5000/" + product.image} /> */}
+        <img
+          src={
+            "https://psychic-fiesta-9qr479q7xq3646-5000.app.github.dev/" +
+            (product.image && product.image !== ""
+              ? product.image
+              : "uploads/default_image.png")
+          }
+          width="100%"
+        />
         <Typography fontWeight={"bold"}>{product.name}</Typography>
         <Box
           style={{
@@ -88,7 +98,9 @@ export default function ProductCard(props) {
             variant="p"
             style={{ backgroundColor: "#FFF4E6", color: "#FD882B" }}
           >
-            {product.category}
+            {product.category && product.category.name
+              ? product.category.name
+              : ""}
           </Typography>
         </Box>
         <Button

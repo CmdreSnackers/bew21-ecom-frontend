@@ -21,6 +21,10 @@ import {
   updateCategory,
   deleteCategory,
 } from "../../utils/api_categories";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 import { useSnackbar } from "notistack";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +38,10 @@ export default function CategoryPage() {
   const { currentUser = {} } = cookies;
   const { token } = currentUser;
 
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [name, setName] = useState("");
+  const [editCategoryName, setEditCategoryName] = useState("");
+  const [editCategoryID, setEditCategoryID] = useState("");
 
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
@@ -51,9 +58,28 @@ export default function CategoryPage() {
       queryClient.invalidateQueries({
         queryKey: ["categories"],
       });
+      setName("");
     },
     onError: (e) => {
       enqueueSnackbar(e.response.data.message, {
+        variant: "error",
+      });
+    },
+  });
+
+  const updateCategoryMutation = useMutation({
+    mutationFn: updateCategory,
+    onSuccess: () => {
+      enqueueSnackbar("Updated Category", {
+        variant: "success",
+      });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      // close modal
+      setOpenEditModal(false);
+    },
+
+    onError: (error) => {
+      enqueueSnackbar(error.response.data.message, {
         variant: "error",
       });
     },
@@ -135,7 +161,12 @@ export default function CategoryPage() {
                       color="primary"
                       variant="contained"
                       onClick={() => {
-                        handleUpdateCategory();
+                        // open the edit modal
+                        setOpenEditModal(true);
+                        // set the edit category field to its name as value
+                        setEditCategoryName(c.name);
+                        // set the edit category id so that we know which category to update
+                        setEditCategoryID(c._id);
                       }}
                       sx={{ marginRight: "10px" }}
                     >
@@ -171,6 +202,35 @@ export default function CategoryPage() {
           )}
         </Table>
       </TableContainer>
+
+      <Dialog open={openEditModal} onClose={() => setOpenEditModal(false)}>
+        <DialogTitle>Edit Category</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Name"
+            variant="outlined"
+            sx={{ width: "100%", marginTop: "15px" }}
+            value={editCategoryName}
+            onChange={(e) => setEditCategoryName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenEditModal(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              updateCategoryMutation.mutate({
+                _id: editCategoryID,
+                name: editCategoryName,
+                token: token,
+              });
+            }}
+          >
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
