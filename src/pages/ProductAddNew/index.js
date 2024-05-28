@@ -7,12 +7,17 @@ import {
   Typography,
   Container,
   TextField,
+  InputLabel,
+  Select,
+  FormControl,
+  MenuItem,
 } from "@mui/material";
 import Header from "../../components/Header";
 import { addProduct } from "../../utils/api_products";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { getCategories } from "../../utils/api_categories";
 
 export default function ProductAddNew() {
   const navigate = useNavigate();
@@ -23,6 +28,11 @@ export default function ProductAddNew() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories(),
+  });
 
   //setup mutation for add new product
   const addNewMutation = useMutation({
@@ -96,13 +106,28 @@ export default function ProductAddNew() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Category"
-                variant="outlined"
-                fullWidth
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+              <FormControl
+                sx={{ marginTop: "10px", width: "200px", marginLeft: "10px" }}
+              >
+                <InputLabel id="product-select-label">Category</InputLabel>
+                <Select
+                  labelId="product-select-label"
+                  id="product-select"
+                  label="Category"
+                  value={category}
+                  onChange={(event) => {
+                    setCategory(event.target.value);
+                  }}
+                >
+                  {categories.map((category) => {
+                    return (
+                      <MenuItem key={category._id} value={category._id}>
+                        {category.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <Button variant="contained" fullWidth onClick={handleFormSubmit}>
